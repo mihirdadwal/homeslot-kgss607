@@ -1,0 +1,85 @@
+<div class="compare-container">
+  <div class="compare-header">
+    <a routerLink="/properties" class="btn-back">← Back to Listings</a>
+    <h1>Side-by-Side Property Comparison</h1>
+    <p>Compare key specifications, pricing, amenities, and locations to choose the ideal property.</p>
+  </div>
+
+  <div *ngIf="loading" class="spinner-box">
+    <div class="spinner"></div>
+    <p>Loading comparison metrics...</p>
+  </div>
+
+  <div *ngIf="!loading && properties.length === 0" class="empty-state">
+    <h3>No properties selected for comparison</h3>
+    <p>Return to the search listings page and click "+ Compare" on up to 4 properties.</p>
+    <a routerLink="/properties" class="btn-primary">Browse Properties</a>
+  </div>
+
+  <div *ngIf="!loading && properties.length > 0" class="table-responsive">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th class="spec-header-cell">Specifications</th>
+          <th *ngFor="let p of properties" class="property-header-cell">
+            <button (click)="removeProperty(p.id)" class="btn-remove-col" title="Remove from comparison">✕</button>
+            <img [src]="p.coverImageUrl" [alt]="p.title" class="compare-card-img" />
+            <h3 class="compare-prop-title">{{ p.title }}</h3>
+            <div class="compare-prop-price">₹ {{ p.price | number }}</div>
+            <a [routerLink]="['/properties', p.id]" class="btn-view-link">View Full Page →</a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="spec-label-cell">City / Location</td>
+          <td *ngFor="let p of properties">{{ p.address }}, {{ p.city }}</td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Property Type</td>
+          <td *ngFor="let p of properties"><strong>{{ p.propertyType }}</strong></td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Listing Type</td>
+          <td *ngFor="let p of properties">{{ p.listingType }}</td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Bedrooms (BHK)</td>
+          <td *ngFor="let p of properties"><strong>{{ p.bhk }} BHK</strong></td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Bathrooms</td>
+          <td *ngFor="let p of properties">{{ p.bathrooms }} Baths</td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Super Built-up Area</td>
+          <td *ngFor="let p of properties"><strong>{{ p.areaSqft }} Sq.Ft.</strong></td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Rate (Price / Sq.Ft.)</td>
+          <td *ngFor="let p of properties">₹ {{ calculatePricePerSqft(p) | number }} / sq.ft</td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Construction Status</td>
+          <td *ngFor="let p of properties"><span class="badge-status">{{ p.status.replace('_', ' ') }}</span></td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Developer / Builder</td>
+          <td *ngFor="let p of properties">{{ p.builderName }}</td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Rating & Reviews</td>
+          <td *ngFor="let p of properties">⭐ {{ p.avgRating }} ({{ p.reviewCount }} reviews)</td>
+        </tr>
+        <tr>
+          <td class="spec-label-cell">Amenities</td>
+          <td *ngFor="let p of properties">
+            <div class="amenities-list-box">
+              {{ p.amenities }}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

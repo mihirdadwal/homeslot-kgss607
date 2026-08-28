@@ -1,0 +1,287 @@
+<div class="buyer-portal-container">
+  <!-- Toast -->
+  <div *ngIf="toastMessage" class="toast-notification">
+    <span>{{ toastMessage }}</span>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="portal-nav">
+    <div class="nav-brand">
+      <span class="brand-logo">🏡 HomeSlot</span>
+      <span class="portal-tag">Buyer Portal</span>
+    </div>
+    <div class="nav-right">
+      <a routerLink="/properties" class="btn-browse-link">🔍 Browse Listings</a>
+      <div class="user-pill">
+        <span class="user-name">{{ profile.fullName || user?.email }}</span>
+        <span class="role-badge">Buyer</span>
+      </div>
+      <button (click)="logout()" class="btn-logout">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Main Layout -->
+  <div class="portal-body">
+    <!-- Sidebar Navigation -->
+    <aside class="portal-sidebar">
+      <div class="user-profile-header">
+        <div class="user-avatar">{{ (profile.fullName || user?.email || 'B').charAt(0).toUpperCase() }}</div>
+        <h3 class="user-disp-name">{{ profile.fullName || 'Valued Buyer' }}</h3>
+        <p class="user-email">{{ user?.email }}</p>
+      </div>
+
+      <nav class="sidebar-menu">
+        <button [class.active]="activeTab === 'overview'" (click)="activeTab = 'overview'" class="menu-item">
+          📊 Dashboard Overview
+        </button>
+        <button [class.active]="activeTab === 'favorites'" (click)="activeTab = 'favorites'" class="menu-item">
+          ❤️ Saved Favorites ({{ metrics.totalFavorites }})
+        </button>
+        <button [class.active]="activeTab === 'visits'" (click)="activeTab = 'visits'" class="menu-item">
+          📅 Scheduled Visits ({{ metrics.totalSiteVisits }})
+        </button>
+        <button [class.active]="activeTab === 'inquiries'" (click)="activeTab = 'inquiries'" class="menu-item">
+          💬 Builder Inquiries ({{ metrics.totalInquiries }})
+        </button>
+        <button [class.active]="activeTab === 'history'" (click)="activeTab = 'history'" class="menu-item">
+          🕒 Recently Viewed
+        </button>
+        <button [class.active]="activeTab === 'profile'" (click)="activeTab = 'profile'" class="menu-item">
+          👤 Profile & Preferences
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Tab Body -->
+    <main class="portal-content">
+      <!-- TAB 1: OVERVIEW -->
+      <div *ngIf="activeTab === 'overview'" class="tab-pane">
+        <div class="welcome-banner">
+          <h1>Welcome Back, {{ profile.fullName || 'Home Buyer' }}! 👋</h1>
+          <p>Manage your saved properties, track site visit bookings, communicate with developers, and update your home preferences.</p>
+        </div>
+
+        <!-- Metric Cards Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card" (click)="activeTab = 'favorites'">
+            <div class="metric-icon fav-icon">❤️</div>
+            <div>
+              <div class="metric-num">{{ metrics.totalFavorites }}</div>
+              <div class="metric-lbl">Saved Properties</div>
+            </div>
+          </div>
+
+          <div class="metric-card" (click)="activeTab = 'visits'">
+            <div class="metric-icon visit-icon">📅</div>
+            <div>
+              <div class="metric-num">{{ metrics.totalSiteVisits }}</div>
+              <div class="metric-lbl">Site Visits Scheduled</div>
+            </div>
+          </div>
+
+          <div class="metric-card" (click)="activeTab = 'inquiries'">
+            <div class="metric-icon inq-icon">💬</div>
+            <div>
+              <div class="metric-num">{{ metrics.totalInquiries }}</div>
+              <div class="metric-lbl">Builder Inquiries</div>
+            </div>
+          </div>
+
+          <div class="metric-card" (click)="activeTab = 'history'">
+            <div class="metric-icon hist-icon">🕒</div>
+            <div>
+              <div class="metric-num">{{ metrics.totalRecentlyViewed }}</div>
+              <div class="metric-lbl">Recently Viewed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action Section -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2>Recently Viewed Listings</h2>
+            <a routerLink="/properties" class="link-view-all">Browse All Properties →</a>
+          </div>
+
+          <div class="recent-grid">
+            <div *ngFor="let p of recentlyViewed.slice(0, 3)" class="recent-item-card" [routerLink]="['/properties', p.id]">
+              <img [src]="p.coverImageUrl" [alt]="p.title" class="recent-img" />
+              <div class="recent-info">
+                <h4>{{ p.title }}</h4>
+                <div class="recent-price">₹ {{ p.price | number }}</div>
+                <div class="recent-loc">📍 {{ p.city }}</div>
+              </div>
+            </div>
+            <div *ngIf="recentlyViewed.length === 0" class="empty-inline">
+              No recently viewed properties yet. Explore our listings to find your match!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: FAVORITES -->
+      <div *ngIf="activeTab === 'favorites'" class="tab-pane">
+        <h2 class="tab-title">❤️ My Saved Favorites</h2>
+        <div *ngIf="favorites.length === 0" class="empty-tab-state">
+          <div class="empty-icon">💔</div>
+          <h3>No saved properties yet</h3>
+          <p>Click the heart icon on any property listing to save it here for quick access.</p>
+          <a routerLink="/properties" class="btn-primary">Browse Properties</a>
+        </div>
+
+        <div class="properties-grid" *ngIf="favorites.length > 0">
+          <div *ngFor="let p of favorites" class="fav-card">
+            <img [src]="p.coverImageUrl" [alt]="p.title" class="fav-img" />
+            <div class="fav-body">
+              <span class="badge-type">{{ p.propertyType }}</span>
+              <h3 class="fav-title">{{ p.title }}</h3>
+              <div class="fav-price">₹ {{ p.price | number }}</div>
+              <div class="fav-loc">📍 {{ p.address }}, {{ p.city }}</div>
+              <div class="fav-actions">
+                <button (click)="removeFavorite(p.id)" class="btn-remove-fav">Remove</button>
+                <a [routerLink]="['/properties', p.id]" class="btn-view">View Details →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: SITE VISITS -->
+      <div *ngIf="activeTab === 'visits'" class="tab-pane">
+        <h2 class="tab-title">📅 My Scheduled Site Visits</h2>
+        <div *ngIf="siteVisits.length === 0" class="empty-tab-state">
+          <div class="empty-icon">📆</div>
+          <h3>No site visits scheduled yet</h3>
+          <p>Visit any property details page and click "Schedule Free Site Visit".</p>
+          <a routerLink="/properties" class="btn-primary">Browse Properties</a>
+        </div>
+
+        <div class="visits-list" *ngIf="siteVisits.length > 0">
+          <div *ngFor="let v of siteVisits" class="visit-card">
+            <img [src]="v.coverImageUrl" [alt]="v.propertyTitle" class="visit-img" />
+            <div class="visit-details">
+              <h3 class="visit-prop-title">{{ v.propertyTitle }}</h3>
+              <p class="visit-address">📍 {{ v.propertyAddress }}</p>
+              <div class="visit-meta">
+                <span>📆 Date: <strong>{{ v.visitDate | date:'mediumDate' }}</strong></span>
+                <span>⏰ Time: <strong>{{ v.timeSlot }}</strong></span>
+              </div>
+              <div *ngIf="v.notes" class="visit-notes">Note: {{ v.notes }}</div>
+            </div>
+            <div class="visit-status-col">
+              <span class="status-badge" [class.cancelled]="v.status === 'CANCELLED'" [class.scheduled]="v.status === 'SCHEDULED'">{{ v.status }}</span>
+              <button *ngIf="v.status === 'SCHEDULED'" (click)="cancelVisit(v.id)" class="btn-cancel-visit">Cancel Visit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: INQUIRIES -->
+      <div *ngIf="activeTab === 'inquiries'" class="tab-pane">
+        <h2 class="tab-title">💬 My Builder Inquiries</h2>
+        <div *ngIf="inquiries.length === 0" class="empty-tab-state">
+          <div class="empty-icon">📨</div>
+          <h3>No inquiries sent yet</h3>
+          <p>Have questions for developers? Click "Contact Builder" on any property page.</p>
+        </div>
+
+        <div class="inquiries-list" *ngIf="inquiries.length > 0">
+          <div *ngFor="let inq of inquiries" class="inquiry-card">
+            <div class="inquiry-header">
+              <h3 class="inquiry-subject">{{ inq.subject }}</h3>
+              <span class="status-badge" [class.replied]="inq.status === 'REPLIED'">{{ inq.status }}</span>
+            </div>
+            <div class="inquiry-prop">Property: <strong>{{ inq.propertyTitle }}</strong></div>
+            <p class="inquiry-msg">"{{ inq.message }}"</p>
+            <div class="inquiry-footer">
+              <span>Submitted on: {{ inq.createdAt | date:'medium' }}</span>
+              <span>Contact: {{ inq.phone }} | {{ inq.email }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: RECENTLY VIEWED -->
+      <div *ngIf="activeTab === 'history'" class="tab-pane">
+        <div class="tab-title-row">
+          <h2 class="tab-title">🕒 Recently Viewed History</h2>
+          <button *ngIf="recentlyViewed.length > 0" (click)="clearHistory()" class="btn-clear-history">Clear History</button>
+        </div>
+
+        <div *ngIf="recentlyViewed.length === 0" class="empty-tab-state">
+          <div class="empty-icon">👀</div>
+          <h3>No browsing history</h3>
+          <p>Properties you view will automatically appear here for easy reference.</p>
+        </div>
+
+        <div class="properties-grid" *ngIf="recentlyViewed.length > 0">
+          <div *ngFor="let p of recentlyViewed" class="fav-card" [routerLink]="['/properties', p.id]">
+            <img [src]="p.coverImageUrl" [alt]="p.title" class="fav-img" />
+            <div class="fav-body">
+              <span class="badge-type">{{ p.propertyType }}</span>
+              <h3 class="fav-title">{{ p.title }}</h3>
+              <div class="fav-price">₹ {{ p.price | number }}</div>
+              <div class="fav-loc">📍 {{ p.address }}, {{ p.city }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: PROFILE -->
+      <div *ngIf="activeTab === 'profile'" class="tab-pane">
+        <h2 class="tab-title">👤 Buyer Profile & Search Preferences</h2>
+        <div class="profile-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" [(ngModel)]="profile.fullName" class="form-input" placeholder="Your full name" />
+            </div>
+
+            <div class="form-group">
+              <label>Preferred City</label>
+              <input type="text" [(ngModel)]="profile.city" class="form-input" placeholder="e.g. Hyderabad, Bangalore" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Minimum Budget (₹)</label>
+              <input type="number" [(ngModel)]="profile.budgetMin" class="form-input" placeholder="e.g. 5000000" />
+            </div>
+
+            <div class="form-group">
+              <label>Maximum Budget (₹)</label>
+              <input type="number" [(ngModel)]="profile.budgetMax" class="form-input" placeholder="e.g. 20000000" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Preferred Property Type</label>
+              <select [(ngModel)]="profile.preferredPropertyType" class="form-select">
+                <option value="">Any Type</option>
+                <option value="APARTMENT">Apartment</option>
+                <option value="VILLA">Villa</option>
+                <option value="PENTHOUSE">Penthouse</option>
+                <option value="PLOT">Plot</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Preferred BHK</label>
+              <select [(ngModel)]="profile.preferredBhk" class="form-select">
+                <option [ngValue]="undefined">Any BHK</option>
+                <option [ngValue]="1">1 BHK</option>
+                <option [ngValue]="2">2 BHK</option>
+                <option [ngValue]="3">3 BHK</option>
+                <option [ngValue]="4">4 BHK</option>
+              </select>
+            </div>
+          </div>
+
+          <button (click)="saveProfile()" class="btn-save-profile">Save Changes</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
