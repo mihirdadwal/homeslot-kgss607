@@ -11,4 +11,6 @@ import java.util.List;
 public interface PropertyRepository extends JpaRepository<Property, Long>, JpaSpecificationExecutor<Property> {
     List<Property> findTop6ByOrderByAvgRatingDescCreatedAtDesc();
     List<Property> findByCityIgnoreCase(String city);
+    List<Property> findByBuilderIdOrderByCreatedAtDesc(Long builderId);
+    long countByBuilderId(Long builderId);
 }

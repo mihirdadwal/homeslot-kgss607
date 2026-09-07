@@ -28,18 +28,28 @@
 
 ## Active phase
 
-### Phase 4 – Builder & Property Management
+### Phase 4 – Builder & Property Management Module
 - **Dates**: 26 Aug 2026 – 01 Sep 2026
+- **Status**: Completed, fully tested & verified
+- **Deliverables**:
+  - `backend/` — Spring Boot 3.x Builder APIs (`/api/v1/builder/**` protected by `@PreAuthorize("hasAnyAuthority('ROLE_BUILDER', 'ROLE_ADMIN')")`, Property creation/editing/deletion, Builder Inquiry replies, Site visit status updates, Builder Profile management)
+  - `frontend/` — Angular 17+ Builder Portal (`BuilderDashboardComponent` with Overview metrics, My Properties inventory grid, Leads & Inquiries reply modal, Site Visit agenda list, Company Profile settings, and Add/Edit Property Modal)
+  - `docs/phase4/Weekly_Status_Report_Week4_Mihir_Dadwal.md` & `.docx` — Week 4 status report submitted to Vaishali Pujari
+  - `docs/phase4/screenshots/` — Visual proof of Builder Portal dashboard & recorded WebP demo
+
+## Active phase
+
+### Phase 5 – Admin, Approval & Platform Management Module
+- **Dates**: 02 Sep 2026 – 08 Sep 2026
 - **Scope** (from Task Assignment):
-  - Builder Dashboard & Inventory Metrics
-  - Property Listing Creation & Editing
-  - Media & Document Upload Management
-  - Builder Inquiry & Lead Tracking
-  - Site Visit Management & Slot Configuration
+  - Admin Dashboard & System Analytics Overview
+  - Builder KYC & Account Verification Workflow
+  - Property Listing Approval / Rejection Queue
+  - User & Role Access Management (Buyers, Builders, Admins)
+  - Audit Logging & Platform Compliance Reports
 
 ## Upcoming phases (from Task Assignment)
 
-- **Phase 5** (02–08 Sep): Search Engine, Booking & Payment Integration
 - **Phase 6** (09–14 Sep): Communication, Admin Panel & Testing
 - **Phase 7** (15–19 Sep): Final Integration, Deployment & Handover
 

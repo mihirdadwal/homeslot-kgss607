@@ -9,5 +9,8 @@ import java.util.List;
 @Repository
 public interface SiteVisitScheduleRepository extends JpaRepository<SiteVisitSchedule, Long> {
     List<SiteVisitSchedule> findByUserIdOrderByVisitDateAsc(Long userId);
+    List<SiteVisitSchedule> findByPropertyBuilderIdOrderByVisitDateAsc(Long builderId);
     long countByUserId(Long userId);
+    long countByPropertyBuilderId(Long builderId);
+    long countByPropertyBuilderIdAndStatus(Long builderId, String status);
 }

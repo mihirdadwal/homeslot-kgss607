@@ -1,0 +1,499 @@
+<div class="builder-portal">
+  <!-- Top Navigation Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="brand">
+        <a routerLink="/" class="logo">HomeSlot <span>Builder Portal</span></a>
+      </div>
+
+      <nav class="nav-links">
+        <button class="nav-item" [class.active]="activeTab === 'overview'" (click)="setActiveTab('overview')">
+          <i class="icon">📊</i> Overview
+        </button>
+        <button class="nav-item" [class.active]="activeTab === 'properties'" (click)="setActiveTab('properties')">
+          <i class="icon">🏢</i> My Properties
+          <span class="badge" *ngIf="metrics.totalProperties > 0">{{ metrics.totalProperties }}</span>
+        </button>
+        <button class="nav-item" [class.active]="activeTab === 'inquiries'" (click)="setActiveTab('inquiries')">
+          <i class="icon">📩</i> Leads & Inquiries
+          <span class="badge badge-warning" *ngIf="metrics.pendingInquiries > 0">{{ metrics.pendingInquiries }}</span>
+        </button>
+        <button class="nav-item" [class.active]="activeTab === 'site-visits'" (click)="setActiveTab('site-visits')">
+          <i class="icon">📅</i> Site Visits
+          <span class="badge badge-info" *ngIf="metrics.upcomingSiteVisits > 0">{{ metrics.upcomingSiteVisits }}</span>
+        </button>
+        <button class="nav-item" [class.active]="activeTab === 'profile'" (click)="setActiveTab('profile')">
+          <i class="icon">👤</i> Profile
+        </button>
+      </nav>
+
+      <div class="user-menu">
+        <div class="user-details">
+          <span class="user-name">{{ profile.companyName || user?.email }}</span>
+          <span class="user-role">Builder Partner</span>
+        </div>
+        <button (click)="logout()" class="btn-logout" title="Logout">
+          <i>🚪</i> Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Alert Banner -->
+  <div class="alert-container" *ngIf="alertMessage">
+    <div class="alert" [ngClass]="'alert-' + alertType">
+      <span>{{ alertMessage }}</span>
+      <button class="close-btn" (click)="alertMessage = null">&times;</button>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+
+    <!-- 1. OVERVIEW TAB -->
+    <section *ngIf="activeTab === 'overview'" class="tab-pane">
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h1>Welcome back, {{ profile.contactPersonName || 'Builder' }}! 👋</h1>
+          <p>Manage your real estate listings, buyer inquiries, and property site visits in real time.</p>
+        </div>
+        <div class="banner-actions">
+          <button class="btn btn-primary" (click)="openAddPropertyModal()">
+            <i class="icon">+</i> Post New Property
+          </button>
+        </div>
+      </div>
+
+      <!-- Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card card-purple">
+          <div class="metric-icon">🏢</div>
+          <div class="metric-data">
+            <span class="metric-value">{{ metrics.totalProperties }}</span>
+            <span class="metric-label">Total Properties</span>
+          </div>
+        </div>
+        <div class="metric-card card-blue">
+          <div class="metric-icon">✨</div>
+          <div class="metric-data">
+            <span class="metric-value">{{ metrics.activeListings }}</span>
+            <span class="metric-label">Active Listings</span>
+          </div>
+        </div>
+        <div class="metric-card card-green">
+          <div class="metric-icon">💬</div>
+          <div class="metric-data">
+            <span class="metric-value">{{ metrics.totalInquiries }}</span>
+            <span class="metric-label">Total Leads / Inquiries</span>
+          </div>
+        </div>
+        <div class="metric-card card-amber">
+          <div class="metric-icon">⏳</div>
+          <div class="metric-data">
+            <span class="metric-value">{{ metrics.pendingInquiries }}</span>
+            <span class="metric-label">Pending Responses</span>
+          </div>
+        </div>
+        <div class="metric-card card-rose">
+          <div class="metric-icon">📅</div>
+          <div class="metric-data">
+            <span class="metric-value">{{ metrics.totalSiteVisits }}</span>
+            <span class="metric-label">Total Site Visits</span>
+          </div>
+        </div>
+        <div class="metric-card card-indigo">
+          <div class="metric-icon">📌</div>
+          <div class="metric-data">
+            <span class="metric-value">{{ metrics.upcomingSiteVisits }}</span>
+            <span class="metric-label">Scheduled Visits</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Column Layout: Recent Leads & Scheduled Site Visits -->
+      <div class="dashboard-grid">
+        <!-- Recent Inquiries -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3>Recent Buyer Inquiries</h3>
+            <button class="link-btn" (click)="setActiveTab('inquiries')">View All ({{ inquiries.length }})</button>
+          </div>
+          <div class="card-body">
+            <div *ngIf="inquiries.length === 0" class="empty-state">
+              <p>No buyer inquiries received yet.</p>
+            </div>
+            <div *ngFor="let item of inquiries.slice(0, 4)" class="inquiry-item">
+              <div class="inquiry-header">
+                <span class="buyer-name">{{ item.name }}</span>
+                <span class="badge" [class.badge-pending]="item.status === 'PENDING'" [class.badge-success]="item.status === 'REPLIED'">
+                  {{ item.status }}
+                </span>
+              </div>
+              <p class="inquiry-property">Property: <strong>{{ item.propertyTitle }}</strong></p>
+              <p class="inquiry-msg">"{{ item.message }}"</p>
+              <div class="inquiry-footer">
+                <span class="inquiry-date">{{ item.createdAt | date:'mediumDate' }}</span>
+                <button class="btn btn-sm btn-outline" (click)="openReplyModal(item)">Reply Lead</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Site Visits -->
+        <div class="content-card">
+          <div class="card-header">
+            <h3>Upcoming Site Visits</h3>
+            <button class="link-btn" (click)="setActiveTab('site-visits')">View All ({{ siteVisits.length }})</button>
+          </div>
+          <div class="card-body">
+            <div *ngIf="siteVisits.length === 0" class="empty-state">
+              <p>No site visits scheduled yet.</p>
+            </div>
+            <div *ngFor="let visit of siteVisits.slice(0, 4)" class="visit-item">
+              <div class="visit-details">
+                <span class="visit-title">{{ visit.propertyTitle }}</span>
+                <span class="visit-time">📅 {{ visit.visitDate | date:'mediumDate' }} | ⏰ {{ visit.timeSlot }}</span>
+              </div>
+              <span class="status-pill" [class.pill-scheduled]="visit.status === 'SCHEDULED'" [class.pill-completed]="visit.status === 'COMPLETED'">
+                {{ visit.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MY PROPERTIES TAB -->
+    <section *ngIf="activeTab === 'properties'" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>My Property Listings</h2>
+          <p>Manage and create property listings published on HomeSlot Platform.</p>
+        </div>
+        <button class="btn btn-primary" (click)="openAddPropertyModal()">
+          <i class="icon">+</i> Add New Property
+        </button>
+      </div>
+
+      <div *ngIf="properties.length === 0" class="empty-box">
+        <div class="empty-icon">🏢</div>
+        <h3>No properties listed yet</h3>
+        <p>Click below to create your first real estate listing.</p>
+        <button class="btn btn-primary mt-3" (click)="openAddPropertyModal()">+ Add New Property</button>
+      </div>
+
+      <div class="properties-grid" *ngIf="properties.length > 0">
+        <div *ngFor="let prop of properties" class="property-card">
+          <div class="prop-image" [style.background-image]="'url(' + (prop.coverImageUrl || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800') + ')'">
+            <span class="status-tag" [ngClass]="prop.status.toLowerCase()">{{ formatStatus(prop.status) }}</span>
+            <span class="price-tag">₹{{ prop.price | number }}</span>
+          </div>
+          <div class="prop-content">
+            <h3 class="prop-title">{{ prop.title }}</h3>
+            <p class="prop-location">📍 {{ prop.address }}, {{ prop.city }}</p>
+            <div class="prop-features">
+              <span>🛏️ {{ prop.bhk }} BHK</span>
+              <span>🚿 {{ prop.bathrooms }} Baths</span>
+              <span>📐 {{ prop.areaSqft }} sq.ft</span>
+              <span>🏷️ {{ prop.propertyType }}</span>
+            </div>
+            <div class="prop-actions">
+              <button class="btn btn-sm btn-outline" (click)="openEditPropertyModal(prop)">✏️ Edit</button>
+              <button class="btn btn-sm btn-danger-outline" (click)="deleteProperty(prop.id, prop.title)">🗑️ Delete</button>
+              <a [routerLink]="['/properties', prop.id]" target="_blank" class="btn btn-sm btn-light">👁️ Preview</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. LEADS & INQUIRIES TAB -->
+    <section *ngIf="activeTab === 'inquiries'" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>Buyer Leads & Inquiries</h2>
+          <p>Respond to customer inquiries to maximize conversion.</p>
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-btn" [class.active]="inquiryFilter === 'ALL'" (click)="inquiryFilter = 'ALL'">All ({{ inquiries.length }})</button>
+          <button class="filter-btn" [class.active]="inquiryFilter === 'PENDING'" (click)="inquiryFilter = 'PENDING'">Pending</button>
+          <button class="filter-btn" [class.active]="inquiryFilter === 'REPLIED'" (click)="inquiryFilter = 'REPLIED'">Replied</button>
+        </div>
+      </div>
+
+      <div *ngIf="filteredInquiries.length === 0" class="empty-box">
+        <div class="empty-icon">📩</div>
+        <h3>No inquiries found</h3>
+        <p>Buyer inquiries sent for your properties will appear here.</p>
+      </div>
+
+      <div class="inquiries-list" *ngIf="filteredInquiries.length > 0">
+        <div *ngFor="let item of filteredInquiries" class="lead-card">
+          <div class="lead-header">
+            <div class="lead-info">
+              <h3>{{ item.name }}</h3>
+              <span class="lead-contact">📧 {{ item.email }} | 📞 {{ item.phone }}</span>
+            </div>
+            <span class="badge" [class.badge-pending]="item.status === 'PENDING'" [class.badge-success]="item.status === 'REPLIED'">
+              {{ item.status }}
+            </span>
+          </div>
+
+          <div class="lead-body">
+            <p class="lead-property"><strong>Target Property:</strong> {{ item.propertyTitle }}</p>
+            <p class="lead-subject"><strong>Subject:</strong> {{ item.subject || 'Inquiry' }}</p>
+            <div class="message-box">
+              <p class="message-text">"{{ item.message }}"</p>
+              <span class="message-date">{{ item.createdAt | date:'medium' }}</span>
+            </div>
+
+            <!-- Builder Reply Box if present -->
+            <div *ngIf="item.replyMessage" class="reply-box">
+              <div class="reply-header">
+                <strong>Your Reply</strong>
+                <span class="reply-date">{{ item.repliedAt | date:'medium' }}</span>
+              </div>
+              <p class="reply-text">{{ item.replyMessage }}</p>
+            </div>
+          </div>
+
+          <div class="lead-footer">
+            <button class="btn btn-primary" (click)="openReplyModal(item)">
+              <i class="icon">💬</i> {{ item.replyMessage ? 'Update Reply' : 'Send Reply' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SITE VISITS TAB -->
+    <section *ngIf="activeTab === 'site-visits'" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>Site Visit Schedule Management</h2>
+          <p>Review and confirm property tour schedules submitted by buyers.</p>
+        </div>
+      </div>
+
+      <div *ngIf="siteVisits.length === 0" class="empty-box">
+        <div class="empty-icon">📅</div>
+        <h3>No site visits scheduled</h3>
+        <p>Scheduled property visits will be displayed here.</p>
+      </div>
+
+      <div class="visits-grid" *ngIf="siteVisits.length > 0">
+        <div *ngFor="let visit of siteVisits" class="visit-card">
+          <div class="visit-cover" [style.background-image]="'url(' + (visit.coverImageUrl || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800') + ')'">
+            <span class="status-pill" [class.pill-scheduled]="visit.status === 'SCHEDULED'" [class.pill-completed]="visit.status === 'COMPLETED'" [class.pill-cancelled]="visit.status === 'CANCELLED'">
+              {{ visit.status }}
+            </span>
+          </div>
+
+          <div class="visit-content">
+            <h3 class="visit-prop-title">{{ visit.propertyTitle }}</h3>
+            <p class="visit-address">📍 {{ visit.propertyAddress }}</p>
+
+            <div class="visit-schedule-badge">
+              <span>📅 {{ visit.visitDate | date:'fullDate' }}</span>
+              <span>⏰ {{ visit.timeSlot }}</span>
+            </div>
+
+            <p *ngIf="visit.notes" class="visit-notes"><strong>Notes:</strong> {{ visit.notes }}</p>
+
+            <div class="visit-actions">
+              <button *ngIf="visit.status !== 'COMPLETED'" class="btn btn-sm btn-success" (click)="updateVisitStatus(visit.id, 'COMPLETED')">
+                ✓ Mark Completed
+              </button>
+              <button *ngIf="visit.status !== 'CANCELLED'" class="btn btn-sm btn-danger-outline" (click)="updateVisitStatus(visit.id, 'CANCELLED')">
+                ✕ Cancel Visit
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. BUILDER PROFILE TAB -->
+    <section *ngIf="activeTab === 'profile'" class="tab-pane">
+      <div class="pane-header">
+        <div>
+          <h2>Builder Profile Settings</h2>
+          <p>Update your company details displayed across property listings.</p>
+        </div>
+      </div>
+
+      <div class="profile-card">
+        <form (ngSubmit)="saveProfile()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Company Name *</label>
+              <input type="text" [(ngModel)]="profile.companyName" name="companyName" class="form-input" placeholder="e.g. Acme Builders Ltd." required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Contact Person Name *</label>
+              <input type="text" [(ngModel)]="profile.contactPersonName" name="contactPersonName" class="form-input" placeholder="e.g. Rajesh Sharma" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Business License Number</label>
+              <input type="text" [(ngModel)]="profile.businessLicenseNumber" name="businessLicenseNumber" class="form-input" placeholder="e.g. RERA-MH-2026-998">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address (Read Only)</label>
+              <input type="email" [value]="profile.email || user?.email" class="form-input disabled" disabled>
+            </div>
+          </div>
+
+          <div class="form-actions mt-4">
+            <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ADD / EDIT PROPERTY MODAL -->
+  <div class="modal-backdrop" *ngIf="showPropertyModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>{{ isEditMode ? 'Edit Property Listing' : 'Post New Property Listing' }}</h3>
+        <button class="close-btn" (click)="closePropertyModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="saveProperty()">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="form-label">Property Title *</label>
+              <input type="text" [(ngModel)]="propertyForm.title" name="title" class="form-input" placeholder="e.g. Luxury 3 BHK Sea View Apartment" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Property Type *</label>
+              <select [(ngModel)]="propertyForm.propertyType" name="propertyType" class="form-input">
+                <option value="APARTMENT">Apartment</option>
+                <option value="VILLA">Villa</option>
+                <option value="PENTHOUSE">Penthouse</option>
+                <option value="PLOT">Plot</option>
+                <option value="COMMERCIAL">Commercial</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Listing Type *</label>
+              <select [(ngModel)]="propertyForm.listingType" name="listingType" class="form-input">
+                <option value="BUY">For Sale (Buy)</option>
+                <option value="RENT">For Rent</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Price (INR ₹) *</label>
+              <input type="number" [(ngModel)]="propertyForm.price" name="price" class="form-input" placeholder="e.g. 8500000" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">BHK</label>
+              <input type="number" [(ngModel)]="propertyForm.bhk" name="bhk" class="form-input" placeholder="e.g. 3">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Bathrooms</label>
+              <input type="number" [(ngModel)]="propertyForm.bathrooms" name="bathrooms" class="form-input" placeholder="e.g. 2">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Area (Sq Ft)</label>
+              <input type="number" [(ngModel)]="propertyForm.areaSqft" name="areaSqft" class="form-input" placeholder="e.g. 1450">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Street Address *</label>
+              <input type="text" [(ngModel)]="propertyForm.address" name="address" class="form-input" placeholder="e.g. Bandra Kurla Complex, Road No 4" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">City *</label>
+              <input type="text" [(ngModel)]="propertyForm.city" name="city" class="form-input" placeholder="e.g. Mumbai" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <input type="text" [(ngModel)]="propertyForm.state" name="state" class="form-input" placeholder="e.g. Maharashtra">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Zip Code</label>
+              <input type="text" [(ngModel)]="propertyForm.zipCode" name="zipCode" class="form-input" placeholder="e.g. 400051">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Construction Status *</label>
+              <select [(ngModel)]="propertyForm.status" name="status" class="form-input">
+                <option value="READY_TO_MOVE">Ready to Move</option>
+                <option value="UNDER_CONSTRUCTION">Under Construction</option>
+                <option value="NEW_LAUNCH">New Launch</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Cover Image URL</label>
+              <input type="text" [(ngModel)]="propertyForm.coverImageUrl" name="coverImageUrl" class="form-input" placeholder="https://...">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Additional Image URLs (Comma Separated)</label>
+              <input type="text" [(ngModel)]="propertyForm.imageUrls" name="imageUrls" class="form-input" placeholder="https://image1.jpg, https://image2.jpg">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Amenities (Comma Separated)</label>
+              <input type="text" [(ngModel)]="propertyForm.amenities" name="amenities" class="form-input" placeholder="Gym, Swimming Pool, Parking, Security">
+            </div>
+
+            <div class="form-group full-width">
+              <label class="form-label">Description</label>
+              <textarea [(ngModel)]="propertyForm.description" name="description" class="form-input textarea" rows="3" placeholder="Enter property details..."></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" (click)="closePropertyModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Save Changes' : 'Publish Listing' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPLY INQUIRY MODAL -->
+  <div class="modal-backdrop" *ngIf="showReplyModal">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3>Reply to {{ selectedInquiry?.name }}</h3>
+        <button class="close-btn" (click)="closeReplyModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedInquiry">
+        <div class="lead-summary">
+          <p><strong>Property:</strong> {{ selectedInquiry.propertyTitle }}</p>
+          <p><strong>Inquiry Message:</strong> "{{ selectedInquiry.message }}"</p>
+        </div>
+
+        <div class="form-group mt-3">
+          <label class="form-label">Your Response / Message *</label>
+          <textarea [(ngModel)]="replyMessageText" name="replyText" class="form-input textarea" rows="4" placeholder="Type your reply to the buyer..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="closeReplyModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="sendReply()">Send Response</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

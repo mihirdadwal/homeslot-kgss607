@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**", "/h2-console/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/properties/**").permitAll()
                         .requestMatchers("/api/v1/buyer/**").hasAuthority("ROLE_BUYER")
+                        .requestMatchers("/api/v1/builder/**").hasAnyAuthority("ROLE_BUILDER", "ROLE_ADMIN")
                         .requestMatchers("/api/v1/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )

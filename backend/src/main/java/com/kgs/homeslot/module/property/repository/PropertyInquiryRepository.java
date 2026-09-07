@@ -11,4 +11,6 @@ public interface PropertyInquiryRepository extends JpaRepository<PropertyInquiry
     List<PropertyInquiry> findByUserIdOrderByCreatedAtDesc(Long userId);
     List<PropertyInquiry> findByBuilderIdOrderByCreatedAtDesc(Long builderId);
     long countByUserId(Long userId);
+    long countByBuilderId(Long builderId);
+    long countByBuilderIdAndStatus(Long builderId, String status);
 }

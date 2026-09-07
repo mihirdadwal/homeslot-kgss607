@@ -22,5 +22,7 @@ public class PropertyInquiryDto {
     private String subject;
     private String message;
     private String status;
+    private String replyMessage;
+    private LocalDateTime repliedAt;
     private LocalDateTime createdAt;
 }

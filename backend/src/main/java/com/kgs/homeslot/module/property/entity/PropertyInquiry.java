@@ -49,6 +49,12 @@ public class PropertyInquiry {
     @Builder.Default
     private String status = "PENDING"; // PENDING, REPLIED, CLOSED
 
+    @Column(name = "reply_message", columnDefinition = "TEXT")
+    private String replyMessage;
+
+    @Column(name = "replied_at")
+    private LocalDateTime repliedAt;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

@@ -68,6 +68,8 @@ export interface PropertyInquiry {
   subject?: string;
   message: string;
   status: string;
+  replyMessage?: string;
+  repliedAt?: string;
   createdAt: string;
 }
 
@@ -78,6 +80,10 @@ export interface CreateInquiryRequest {
   phone: string;
   subject?: string;
   message: string;
+}
+
+export interface ReplyInquiryRequest {
+  replyMessage: string;
 }
 
 export interface SiteVisit {
@@ -119,3 +125,67 @@ export interface BuyerProfile {
   preferredPropertyType?: string;
   preferredBhk?: number;
 }
+
+export interface CreatePropertyRequest {
+  title: string;
+  description?: string;
+  propertyType: string;
+  listingType: string;
+  price: number;
+  bhk?: number;
+  bathrooms?: number;
+  areaSqft?: number;
+  address: string;
+  city: string;
+  state?: string;
+  zipCode?: string;
+  latitude?: number;
+  longitude?: number;
+  status: string;
+  amenities?: string;
+  coverImageUrl?: string;
+  imageUrls?: string;
+  brochureUrl?: string;
+}
+
+export interface UpdatePropertyRequest {
+  title?: string;
+  description?: string;
+  propertyType?: string;
+  listingType?: string;
+  price?: number;
+  bhk?: number;
+  bathrooms?: number;
+  areaSqft?: number;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  latitude?: number;
+  longitude?: number;
+  status?: string;
+  amenities?: string;
+  coverImageUrl?: string;
+  imageUrls?: string;
+  brochureUrl?: string;
+}
+
+export interface BuilderDashboardMetrics {
+  totalProperties: number;
+  activeListings: number;
+  totalInquiries: number;
+  pendingInquiries: number;
+  totalSiteVisits: number;
+  upcomingSiteVisits: number;
+}
+
+export interface BuilderProfile {
+  id?: number;
+  userId?: number;
+  email?: string;
+  phone?: string;
+  companyName: string;
+  contactPersonName: string;
+  businessLicenseNumber?: string;
+}
+
