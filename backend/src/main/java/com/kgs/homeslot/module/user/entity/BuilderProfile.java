@@ -29,4 +29,11 @@ public class BuilderProfile {
 
     @Column(name = "business_license_number")
     private String businessLicenseNumber;
+
+    @Column(name = "verification_status")
+    @Builder.Default
+    private String verificationStatus = "VERIFIED"; // PENDING, VERIFIED, REJECTED
+
+    @Column(name = "remarks")
+    private String remarks;
 }

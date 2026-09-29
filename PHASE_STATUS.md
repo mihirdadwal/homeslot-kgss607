@@ -41,16 +41,25 @@
 
 ### Phase 5 – Admin, Approval & Platform Management Module
 - **Dates**: 02 Sep 2026 – 08 Sep 2026
+- **Status**: Completed, fully tested & verified
+- **Deliverables**:
+  - `backend/` — Spring Boot 3.x Admin APIs (`/api/v1/admin/**` protected by `@PreAuthorize("hasAuthority('ROLE_ADMIN')")`, Property moderation queue, Builder KYC verification, User governance, Audit trail logging)
+  - `frontend/` — Angular 17+ Admin Control Panel (`AdminDashboardComponent` with Overview metrics, Property Approvals queue, Builder KYC verification table, User Governance role management, Audit Logs table, Rejection modals)
+  - `docs/phase5/Weekly_Status_Report_Week5_Mihir_Dadwal.md` & `.docx` — Week 5 status report submitted to Vaishali Pujari
+  - `docs/phase5/screenshots/` — Visual proof of Admin Operations dashboard & recorded WebP demo
+
+## Active phase
+
+### Phase 6 – Communication, Notifications & Advanced Testing
+- **Dates**: 09 Sep 2026 – 14 Sep 2026
 - **Scope** (from Task Assignment):
-  - Admin Dashboard & System Analytics Overview
-  - Builder KYC & Account Verification Workflow
-  - Property Listing Approval / Rejection Queue
-  - User & Role Access Management (Buyers, Builders, Admins)
-  - Audit Logging & Platform Compliance Reports
+  - Real-time Notification System (Inquiry Alerts, Visit Reminders, Approval Updates)
+  - Direct Messaging & Chat Communication between Buyers & Builders
+  - End-to-End Automated Integration Testing Suite
+  - Performance Tuning & Database Index Optimization
 
 ## Upcoming phases (from Task Assignment)
 
-- **Phase 6** (09–14 Sep): Communication, Admin Panel & Testing
 - **Phase 7** (15–19 Sep): Final Integration, Deployment & Handover
 
 ## Monthly reports submitted

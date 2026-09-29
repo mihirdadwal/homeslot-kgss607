@@ -86,6 +86,13 @@ public class Property {
     @Builder.Default
     private Integer reviewCount = 0;
 
+    @Column(name = "approval_status")
+    @Builder.Default
+    private String approvalStatus = "APPROVED"; // PENDING_APPROVAL, APPROVED, REJECTED
+
+    @Column(name = "rejection_reason")
+    private String rejectionReason;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

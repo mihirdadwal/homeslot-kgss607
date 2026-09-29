@@ -238,6 +238,8 @@ public class PropertyService {
                 .avgRating(p.getAvgRating())
                 .reviewCount(p.getReviewCount())
                 .isFavorite(isFavorite)
+                .approvalStatus(p.getApprovalStatus())
+                .rejectionReason(p.getRejectionReason())
                 .createdAt(p.getCreatedAt())
                 .build();
     }

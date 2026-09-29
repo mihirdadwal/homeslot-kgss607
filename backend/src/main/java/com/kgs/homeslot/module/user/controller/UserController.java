@@ -32,11 +32,4 @@ public class UserController {
         UserProfileDto dto = userService.getUserProfileByEmail(email);
         return ResponseEntity.ok(ApiResponse.success("User profile fetched successfully", dto));
     }
-
-    @GetMapping("/admin/users")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<ApiResponse<List<User>>> getAllUsersForAdmin() {
-        List<User> users = userRepository.findAll();
-        return ResponseEntity.ok(ApiResponse.success("Admin user list fetched successfully", users));
-    }
 }

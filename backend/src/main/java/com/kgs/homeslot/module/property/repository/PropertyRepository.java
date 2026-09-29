@@ -13,4 +13,6 @@ public interface PropertyRepository extends JpaRepository<Property, Long>, JpaSp
     List<Property> findByCityIgnoreCase(String city);
     List<Property> findByBuilderIdOrderByCreatedAtDesc(Long builderId);
     long countByBuilderId(Long builderId);
+    List<Property> findByApprovalStatusOrderByCreatedAtDesc(String approvalStatus);
+    long countByApprovalStatus(String approvalStatus);
 }

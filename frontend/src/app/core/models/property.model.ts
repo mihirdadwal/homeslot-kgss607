@@ -24,6 +24,8 @@ export interface Property {
   avgRating: number;
   reviewCount: number;
   isFavorite?: boolean;
+  approvalStatus?: string;
+  rejectionReason?: string;
   createdAt: string;
 }
 
@@ -187,5 +189,51 @@ export interface BuilderProfile {
   companyName: string;
   contactPersonName: string;
   businessLicenseNumber?: string;
+  verificationStatus?: string;
+  remarks?: string;
 }
+
+export interface AdminDashboardMetrics {
+  totalUsers: number;
+  totalBuyers: number;
+  totalBuilders: number;
+  totalProperties: number;
+  pendingPropertyApprovals: number;
+  pendingBuilderVerifications: number;
+  totalInquiries: number;
+  totalSiteVisits: number;
+}
+
+export interface UserManagementDto {
+  id: number;
+  email: string;
+  phone: string;
+  role: string;
+  active: boolean;
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  nameOrCompany: string;
+  createdAt: string;
+}
+
+export interface PropertyApprovalRequest {
+  approvalStatus: string;
+  rejectionReason?: string;
+}
+
+export interface BuilderVerificationRequest {
+  verificationStatus: string;
+  remarks?: string;
+}
+
+export interface AuditLogDto {
+  id: number;
+  action: string;
+  performedByEmail: string;
+  targetEntity: string;
+  entityId: number;
+  details: string;
+  createdAt: string;
+}
+
 

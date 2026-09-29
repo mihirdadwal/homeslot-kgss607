@@ -17,4 +17,6 @@ public class BuilderProfileDto {
     private String companyName;
     private String contactPersonName;
     private String businessLicenseNumber;
+    private String verificationStatus;
+    private String remarks;
 }

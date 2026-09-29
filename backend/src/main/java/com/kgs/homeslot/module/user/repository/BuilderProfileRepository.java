@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface BuilderProfileRepository extends JpaRepository<BuilderProfile, Long> {
     Optional<BuilderProfile> findByUser(User user);
+    java.util.List<BuilderProfile> findByVerificationStatus(String verificationStatus);
+    long countByVerificationStatus(String verificationStatus);
 }

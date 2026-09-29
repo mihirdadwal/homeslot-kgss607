@@ -38,5 +38,7 @@ public class PropertyDto {
     private Double avgRating;
     private Integer reviewCount;
     private Boolean isFavorite;
+    private String approvalStatus;
+    private String rejectionReason;
     private LocalDateTime createdAt;
 }
