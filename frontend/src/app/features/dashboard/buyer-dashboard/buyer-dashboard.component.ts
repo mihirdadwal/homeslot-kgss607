@@ -13,10 +13,12 @@ import {
   BuyerProfile
 } from '../../../core/models/property.model';
 
+import { NotificationCenterComponent } from '../../../shared/components/notification-center/notification-center.component';
+
 @Component({
   selector: 'app-buyer-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NotificationCenterComponent],
   templateUrl: './buyer-dashboard.component.html',
   styleUrls: ['./buyer-dashboard.component.css']
 })

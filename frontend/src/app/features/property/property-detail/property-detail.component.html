@@ -147,7 +147,10 @@
             📅 Schedule Free Site Visit
           </button>
           <button class="btn-contact-builder" (click)="showInquiryModal = true">
-            💬 Contact Builder
+            📩 Send Email Inquiry
+          </button>
+          <button class="btn-contact-builder mt-2" (click)="showChatModal = true" style="background: #0284c7; color: white; border: none;">
+            💬 Live Chat with Developer
           </button>
         </div>
 
@@ -251,4 +254,14 @@
       </div>
     </div>
   </div>
+
+  <!-- Live Chat Modal -->
+  <app-chat-modal
+    [showModal]="showChatModal"
+    [propertyId]="property.id"
+    [propertyTitle]="property.title"
+    [recipientId]="property.builderId"
+    [recipientName]="property.builderName"
+    (closeModal)="showChatModal = false">
+  </app-chat-modal>
 </div>

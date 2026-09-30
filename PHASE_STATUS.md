@@ -48,19 +48,24 @@
   - `docs/phase5/Weekly_Status_Report_Week5_Mihir_Dadwal.md` & `.docx` — Week 5 status report submitted to Vaishali Pujari
   - `docs/phase5/screenshots/` — Visual proof of Admin Operations dashboard & recorded WebP demo
 
-## Active phase
-
 ### Phase 6 – Communication, Notifications & Advanced Testing
 - **Dates**: 09 Sep 2026 – 14 Sep 2026
-- **Scope** (from Task Assignment):
-  - Real-time Notification System (Inquiry Alerts, Visit Reminders, Approval Updates)
-  - Direct Messaging & Chat Communication between Buyers & Builders
-  - End-to-End Automated Integration Testing Suite
-  - Performance Tuning & Database Index Optimization
+- **Status**: Completed, fully tested & verified
+- **Deliverables**:
+  - `backend/` — Notification entity/repository/service/controller (`/api/v1/notifications`), Chat message entity/repository/service/controller (`/api/v1/chat`), Database composite indexes on `notifications` and `chat_messages`
+  - `frontend/` — Standalone Angular 17 `NotificationCenterComponent` (nav bell popover & unread count badge), `ChatModalComponent` (live buyer-builder chat modal), integrated into `BuyerDashboardComponent`, `BuilderDashboardComponent`, and `PropertyDetailComponent`
+  - `docs/phase6/Weekly_Status_Report_Week6_Mihir_Dadwal.md` & `.docx` — Week 6 status report submitted to Vaishali Pujari
+  - `docs/phase6/screenshots/` — Visual proof of chat and notification center overview
 
-## Upcoming phases (from Task Assignment)
+## Active phase
 
-- **Phase 7** (15–19 Sep): Final Integration, Deployment & Handover
+### Phase 7 – Deployment, Security & Final Hardening
+- **Dates**: 15 Sep 2026 – 20 Sep 2026
+- **Scope**:
+  - Production Docker Containerization (Spring Boot & Nginx Angular image)
+  - Docker Compose orchestration with MySQL & Redis
+  - Security audit & final production readiness verification
+  - Final monthly and project consolidation reports
 
 ## Monthly reports submitted
 (None yet. First monthly report due after Week 4 wraps.)

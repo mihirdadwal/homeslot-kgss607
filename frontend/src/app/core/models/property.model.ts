@@ -236,4 +236,37 @@ export interface AuditLogDto {
   createdAt: string;
 }
 
+export interface NotificationModel {
+  id: number;
+  userId: number;
+  title: string;
+  message: string;
+  type: string;
+  read: boolean;
+  relatedEntityId?: number;
+  createdAt: string;
+}
+
+export interface ChatMessageModel {
+  id: number;
+  senderId: number;
+  senderEmail: string;
+  senderName: string;
+  recipientId: number;
+  recipientEmail: string;
+  recipientName: string;
+  propertyId: number;
+  propertyTitle: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface SendChatMessageRequest {
+  propertyId: number;
+  recipientId: number;
+  message: string;
+}
+
+
 

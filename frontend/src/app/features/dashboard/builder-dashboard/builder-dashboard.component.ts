@@ -15,10 +15,12 @@ import {
   BuilderProfile
 } from '../../../core/models/property.model';
 
+import { NotificationCenterComponent } from '../../../shared/components/notification-center/notification-center.component';
+
 @Component({
   selector: 'app-builder-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NotificationCenterComponent],
   templateUrl: './builder-dashboard.component.html',
   styleUrls: ['./builder-dashboard.component.css']
 })

@@ -13,10 +13,12 @@ import {
   CreateSiteVisitRequest
 } from '../../../core/models/property.model';
 
+import { ChatModalComponent } from '../../../shared/components/chat-modal/chat-modal.component';
+
 @Component({
   selector: 'app-property-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, ChatModalComponent],
   templateUrl: './property-detail.component.html',
   styleUrls: ['./property-detail.component.css']
 })
@@ -37,6 +39,7 @@ export class PropertyDetailComponent implements OnInit {
   showVisitModal: boolean = false;
   showInquiryModal: boolean = false;
   showShareModal: boolean = false;
+  showChatModal: boolean = false;
   toastMessage: string | null = null;
 
   // Forms
